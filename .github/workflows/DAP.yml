@@ -1,13 +1,23 @@
 name: DAP
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - github_actions
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
+      - github_actions
 
 env:
   UPLOAD_USER_FIRMWARE: false
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
 
