@@ -1,4 +1,3 @@
-*.pio/
-*.vscode/
-*.map
-*.DS_Store
+.vscode/
+build/
+tmp/

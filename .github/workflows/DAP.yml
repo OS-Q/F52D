@@ -7,7 +7,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
 
@@ -27,7 +27,6 @@ jobs:
     - name: script
       id: script
       run: |
-        cd dap
         export IDF_PATH=$PWD/ESP8266_RTOS_SDK
         export PATH="$PATH:$PWD/xtensa-lx106-elf/bin"
         echo "FIRMWARE=$PWD/build" >> $GITHUB_ENV
