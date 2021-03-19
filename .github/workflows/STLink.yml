@@ -12,9 +12,6 @@ on:
       - master
       - github_actions
 
-env:
-  UPLOAD_USER_FIRMWARE: false
-
 jobs:
   build:
     runs-on: ubuntu-14.04
