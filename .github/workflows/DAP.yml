@@ -60,3 +60,8 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: ${{ env.FIRMWARE }}/esp8266_dap.bin
 
+    - name: Upload user firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: esp8266_dap
+        path: ${{ env.FIRMWARE }}
