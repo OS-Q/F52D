@@ -64,4 +64,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: esp8266_dap
-        path: ${{ env.FIRMWARE }}
+        path: ${{ env.FIRMWARE }}/esp8266_dap.bin

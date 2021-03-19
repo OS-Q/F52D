@@ -1,0 +1,37 @@
+name: STLink
+
+on:
+  push:
+    branches:
+      - master
+      - github_actions
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
+      - github_actions
+
+env:
+  UPLOAD_USER_FIRMWARE: false
+
+jobs:
+  build:
+    runs-on: ubuntu-14.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install
+      run: |
+        sudo apt update
+        sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build \
+        make unrar-free autoconf automake libtool gcc g++ gperf \
+        flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial \
+        sed git unzip bash help2man wget bzip2
+
+    - name: script
+      id: script
+      run: |
+        cd stlink
+        git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+        make
