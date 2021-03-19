@@ -24,10 +24,8 @@ jobs:
     - name: install
       run: |
         sudo apt update
-        sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build \
-        make unrar-free autoconf automake libtool gcc g++ gperf \
-        flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial \
-        sed git unzip bash help2man wget bzip2
+        sudo apt install -y git make unrar-free autoconf automake libtool gcc g++ gperf sed git unzip bash help2man wget
+        sudo apt install -y flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial bzip2
 
     - name: script
       id: script
