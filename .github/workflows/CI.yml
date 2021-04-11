@@ -21,6 +21,7 @@ jobs:
         fetch-depth: 1
 
     - name: xtensa-lx106-elf
+      working-directory: DAP
       run: |
         sudo apt update
         sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
@@ -28,6 +29,7 @@ jobs:
         tar -xzf ./xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
 
     - name: ESP8266_RTOS_SDK
+      working-directory: DAP
       run: |
         wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3-rc1/ESP8266_RTOS_SDK-v3.3-rc1.zip
         unzip ESP8266_RTOS_SDK-v3.3-rc1.zip
@@ -38,8 +40,8 @@ jobs:
       working-directory: DAP
       id: build
       run: |
-        export IDF_PATH=../ESP8266_RTOS_SDK
-        export PATH=$PATH:../xtensa-lx106-elf/bin
+        export IDF_PATH=$PWD/ESP8266_RTOS_SDK
+        export PATH="$PATH:$PWD/xtensa-lx106-elf/bin"
         echo "FIRMWARE=$PWD/build" >> $GITHUB_ENV
         python ./idf.py fullclean
         python ./idf.py build
