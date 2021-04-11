@@ -37,12 +37,11 @@ jobs:
       if: success()
       id: build
       run: |
-        # source $HOME/.bashrc
-        export PATH="$PATH:$PWD/xtensa-lx106-elf/bin"
+        export PATH=$PATH:$PWD/xtensa-lx106-elf/bin
         export IDF_PATH=$PWD/ESP8266_RTOS_SDK
         echo "FIRMWARE=$PWD/DAP/build" >> $GITHUB_ENV
-        python DAP/idf.py fullclean
-        python DAP/idf.py build
+        python ./DAP/idf.py fullclean
+        python ./DAP/idf.py build
         echo "::set-output name=status::success"
 
     - name: Upload firmware
