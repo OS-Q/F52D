@@ -25,9 +25,9 @@ jobs:
         sudo apt install -y flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial bzip2 libtool-bin esptool
 
     - name: script
+      working-directory: stlink
       id: script
       run: |
-        cd stlink
         git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
         cd esp-open-sdk && make
         cd ..

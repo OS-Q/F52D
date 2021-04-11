@@ -4,13 +4,8 @@ on:
   push:
     branches:
       - master
-      - github_actions
     tags:
       - '*'
-  pull_request:
-    branches:
-      - master
-      - github_actions
 
 env:
   UPLOAD_USER_FIRMWARE: false
@@ -21,20 +16,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: before_install
+    - name: install
+      working-directory: DAP
       run: |
         sudo apt update
         sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
         wget https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
-
-    - name: install
-      run: |
         tar -xzf ./xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
         wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3-rc1/ESP8266_RTOS_SDK-v3.3-rc1.zip
         unzip ESP8266_RTOS_SDK-v3.3-rc1.zip
         python -m pip install --user -r ./ESP8266_RTOS_SDK/requirements.txt
 
-    - name: script
+    - name: build
+      working-directory: DAP
       id: script
       run: |
         export IDF_PATH=$PWD/ESP8266_RTOS_SDK
@@ -44,7 +38,7 @@ jobs:
         python ./idf.py build
         echo "::set-output name=status::success"
 
-    - name: Generate release tag
+    - name: Generate tag
       id: tag
       if: env.UPLOAD_USER_FIRMWARE == 'true' && steps.script.outputs.status == 'success' && !cancelled()
       run: |
@@ -60,7 +54,7 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: ${{ env.FIRMWARE }}/esp8266_dap.bin
 
-    - name: Upload user firmware
+    - name: Upload firmware
       uses: actions/upload-artifact@v2
       with:
         name: esp8266_dap
