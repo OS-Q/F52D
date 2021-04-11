@@ -12,7 +12,7 @@ env:
 
 jobs:
   DAP:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -64,28 +64,28 @@ jobs:
         name: DAP
         path: ${{ env.FIRMWARE }}/esp8266_dap.bin
 
-  STLINK:
-    runs-on: ubuntu-16.04
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: "recursive"
-        fetch-depth: 1
+  # STLINK:
+  #   runs-on: ubuntu-16.04
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #     with:
+  #       submodules: "recursive"
+  #       fetch-depth: 1
 
-    - name: install
-      run: |
-        sudo apt update
-        sudo apt install -y git make unrar-free autoconf automake libtool gcc g++ gperf sed git unzip bash help2man wget
-        sudo apt install -y flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial bzip2 libtool-bin esptool
+  #   - name: install
+  #     run: |
+  #       sudo apt update
+  #       sudo apt install -y git make unrar-free autoconf automake libtool gcc g++ gperf sed git unzip bash help2man wget
+  #       sudo apt install -y flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial bzip2 libtool-bin esptool
 
-    - name: build
-      working-directory: stlink
-      id: script
-      run: |
-        git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
-        cd esp-open-sdk && make STANDALONE=n && cd ..
-        export ESP_OPEN_SDK=$PWD/esp-open-sdk
-        export XTENSA_TOOLS_ROOT="$ESP_OPEN_SDK/xtensa-lx106-elf/bin"
-        export SDK_BASE="$ESP_OPEN_SDK/sdk"
-        cd src && make
+  #   - name: build
+  #     working-directory: stlink
+  #     id: script
+  #     run: |
+  #       git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+  #       cd esp-open-sdk && make STANDALONE=n && cd ..
+  #       export ESP_OPEN_SDK=$PWD/esp-open-sdk
+  #       export XTENSA_TOOLS_ROOT="$ESP_OPEN_SDK/xtensa-lx106-elf/bin"
+  #       export SDK_BASE="$ESP_OPEN_SDK/sdk"
+  #       cd src && make
