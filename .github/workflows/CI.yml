@@ -1,10 +1,9 @@
 name: CI
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 env:
   UPLOAD_USER_FIRMWARE: true
