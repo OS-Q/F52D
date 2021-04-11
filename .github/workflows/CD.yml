@@ -42,8 +42,7 @@ jobs:
       id: tag
       if: startsWith(github.ref, 'refs/tags/') && steps.build.outputs.status == 'success' && !cancelled()
       run: |
-        echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        echo "::set-output name=release_tag::Release_$(date +"%Y.%m.%d")"
+        echo "::set-output name=release_tag::Release_${GITHUB_REF/refs\/tags\//}_$(date +"%Y.%m.%d")"
         echo "::set-output name=status::success"
 
     - name: Release New
