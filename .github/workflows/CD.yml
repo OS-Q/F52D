@@ -17,6 +17,7 @@ jobs:
         fetch-depth: 1
 
     - name: install
+      working-directory: DAP
       run: |
         sudo apt update
         sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
@@ -27,7 +28,8 @@ jobs:
         python -m pip install --user -r ./ESP8266_RTOS_SDK/requirements.txt
 
     - name: build
-      id: script
+      working-directory: DAP
+      id: build
       run: |
         export IDF_PATH=$PWD/ESP8266_RTOS_SDK
         export PATH="$PATH:$PWD/xtensa-lx106-elf/bin"
@@ -38,7 +40,7 @@ jobs:
 
     - name: Generate tag
       id: tag
-      if: startsWith(github.ref, 'refs/tags/') && steps.script.outputs.status == 'success' && !cancelled()
+      if: startsWith(github.ref, 'refs/tags/') && steps.build.outputs.status == 'success' && !cancelled()
       run: |
         echo "::set-output name=release_tag::UserBuild_$(date +"%Y.%m.%d_%H-%M")"
         echo "::set-output name=status::success"
