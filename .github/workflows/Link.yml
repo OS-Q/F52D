@@ -1,20 +1,19 @@
-name: DAP
+name: release
 
 on:
   push:
-    branches:
-      - master
     tags:
-      - '*'
-
-env:
-  UPLOAD_USER_FIRMWARE: false
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: "recursive"
+        fetch-depth: 1
 
     - name: install
       working-directory: DAP

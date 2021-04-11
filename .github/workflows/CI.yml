@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+
+env:
+  UPLOAD_USER_FIRMWARE: false
+
+jobs:
+  DAP:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: "recursive"
+        fetch-depth: 1
+
+    - name: install
+      working-directory: DAP
+      run: |
+        sudo apt update
+        sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
+        wget https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
+        tar -xzf ./xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
+        wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3-rc1/ESP8266_RTOS_SDK-v3.3-rc1.zip
+        unzip ESP8266_RTOS_SDK-v3.3-rc1.zip
+        python -m pip install --user -r ./ESP8266_RTOS_SDK/requirements.txt
+
+    - name: build
+      working-directory: DAP
+      id: script
+      run: |
+        export IDF_PATH=$PWD/ESP8266_RTOS_SDK
+        export PATH="$PATH:$PWD/xtensa-lx106-elf/bin"
+        echo "FIRMWARE=$PWD/build" >> $GITHUB_ENV
+        python ./idf.py fullclean
+        python ./idf.py build
+        echo "::set-output name=status::success"
+
+    - name: Generate tag
+      id: tag
+      if: env.UPLOAD_USER_FIRMWARE == 'true' && steps.script.outputs.status == 'success' && !cancelled()
+      run: |
+        echo "::set-output name=release_tag::UserBuild_$(date +"%Y.%m.%d_%H-%M")"
+        echo "::set-output name=status::success"
+
+    - name: Release user firmware
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        files: ${{ env.FIRMWARE }}/esp8266_dap.bin
+
+    - name: Upload firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: esp8266_dap
+        path: ${{ env.FIRMWARE }}/esp8266_dap.bin
+
+  STLINK:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install
+      run: |
+        sudo apt update
+        sudo apt install -y git make unrar-free autoconf automake libtool gcc g++ gperf sed git unzip bash help2man wget
+        sudo apt install -y flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial bzip2 libtool-bin esptool
+
+    - name: script
+      working-directory: stlink
+      id: script
+      run: |
+        git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+        cd esp-open-sdk && make
+        cd ..
+        export ESP_OPEN_SDK=$PWD/esp-open-sdk
+        export XTENSA_TOOLS_ROOT="$ESP_OPEN_SDK/xtensa-lx106-elf/bin"
+        export SDK_BASE="$ESP_OPEN_SDK/sdk"
+        cd src && make
