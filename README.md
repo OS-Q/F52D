@@ -4,6 +4,7 @@
 
 [![Build Status](https://github.com/OS-Q/T51D/workflows/CI/badge.svg)](https://github.com/OS-Q/T51D/actions/workflows/CI.yml)
 [![Build Status](https://github.com/OS-Q/T51D/workflows/CD/badge.svg)](https://github.com/OS-Q/T51D/actions/workflows/CD.yml)
+[![Build Status](https://github.com/OS-Q/T51D/workflows/nightly/badge.svg)](https://github.com/OS-Q/T51D/actions/workflows/nightly.yml)
 
 ### [简介](https://github.com/OS-Q/T51D/wiki)
 

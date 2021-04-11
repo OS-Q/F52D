@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'OS-Q/T51D'
     runs-on: ubuntu-18.04
     steps:
     - name: Checkout
@@ -16,7 +17,6 @@ jobs:
         fetch-depth: 1
 
     - name: install
-      working-directory: DAP
       run: |
         sudo apt update
         sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
@@ -27,14 +27,13 @@ jobs:
         python -m pip install --user -r ./ESP8266_RTOS_SDK/requirements.txt
 
     - name: build
-      working-directory: DAP
       id: script
       run: |
         export IDF_PATH=$PWD/ESP8266_RTOS_SDK
         export PATH="$PATH:$PWD/xtensa-lx106-elf/bin"
-        echo "FIRMWARE=$PWD/build" >> $GITHUB_ENV
-        python ./idf.py fullclean
-        python ./idf.py build
+        echo "FIRMWARE=$PWD/DAP/build" >> $GITHUB_ENV
+        python DAP/idf.py fullclean
+        python DAP/idf.py build
         echo "::set-output name=status::success"
 
     - name: Generate tag
