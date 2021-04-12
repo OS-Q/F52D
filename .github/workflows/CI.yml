@@ -19,6 +19,11 @@ jobs:
         submodules: "recursive"
         fetch-depth: 1
 
+      - name: Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
     - name: xtensa-lx106-elf
       working-directory: DAP
       run: |
@@ -32,6 +37,7 @@ jobs:
       run: |
         wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3-rc1/ESP8266_RTOS_SDK-v3.3-rc1.zip
         unzip ESP8266_RTOS_SDK-v3.3-rc1.zip
+        python -m pip install --upgrade pip
         python -m pip install --user -r ./ESP8266_RTOS_SDK/requirements.txt
 
     - name: build

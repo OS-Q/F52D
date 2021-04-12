@@ -16,7 +16,9 @@ jobs:
           - "v3.3"
           - "v3.4"
         xtensa-lx106-elf:
-          - "1.22.0"
+          - "4.8.5"
+          - "5.2.0"
+          - "8.4.0"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -25,14 +27,37 @@ jobs:
           submodules: "recursive"
           fetch-depth: 1
 
-      - name: install xtensa-lx106-elf
+      - name: Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: install xtensa-lx106-elf-8.4.0
         working-directory: DAP
-        if: matrix.xtensa-lx106-elf == '1.22.0'
+        if: matrix.xtensa-lx106-elf == '8.4.0'
+        run: |
+          sudo apt update
+          sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
+          wget https://dl.espressif.com/dl/xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz
+          tar -xzf ./xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz
+
+      - name: install xtensa-lx106-elf-5.2.0
+        working-directory: DAP
+        if: matrix.xtensa-lx106-elf == '5.2.0'
         run: |
           sudo apt update
           sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
           wget https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
           tar -xzf ./xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
+
+      - name: install xtensa-lx106-elf-4.8.5
+        working-directory: DAP
+        if: matrix.xtensa-lx106-elf == '4.8.5'
+        run: |
+          sudo apt update
+          sudo apt install -y gcc git wget make libncurses-dev flex bison python python-serial ninja-build
+          wget https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-88-gde0bdc1-4.8.5.tar.gz
+          tar -xzf ./xtensa-lx106-elf-linux64-1.22.0-88-gde0bdc1-4.8.5.tar.gz
 
       - name: install ESP8266_RTOS_SDK
         working-directory: DAP
@@ -40,6 +65,7 @@ jobs:
         run: |
           wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3-rc1/ESP8266_RTOS_SDK-v3.3-rc1.zip
           unzip ESP8266_RTOS_SDK-v3.3-rc1.zip
+          python -m pip install --upgrade pip
           python -m pip install --user -r ./ESP8266_RTOS_SDK/requirements.txt
 
 
