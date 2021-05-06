@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    if: github.repository == 'OS-Q/T51D'
+    if: github.repository == 'OS-Q/F52D'
     runs-on: ubuntu-18.04
     steps:
     - name: Checkout
